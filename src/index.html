@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/style.css" type="text/css" rel="stylesheet" media="all">
+    <link rel="icon" href="css/icon.ico" sizes=any >
+    <title>Produkt-Check</title>
+</head>
+<body onload="drawGraph();openCity(event, 'Product1');init()">
+
+<h2>Produkte Bewertung</h2>
+
+<p>Die Produkt-Check Web-App unterstützt Sie dabei, ein Produkt anhand der wichtigsten Kriterien zu bewerten.<br><br>
+    Die Kriterienliste umfasst verschiedene Faktoren wie „Kundennutzen“, „Technische Qualität“, „Marktpreis“ usw.
+    Für jedes Kriterium bewerten Sie Ihr Produkt auf einer Skala von -3 bis +3:<br><br>
+    &#8226;  -&nbsp3 &nbsp=&nbsp unterdurchschnittlich<br>
+    &#8226;  &nbsp 0 &nbsp=&nbsp durchschnittlich<br>
+    &#8226;  +3 &nbsp=&nbsp überdurchschnittlich<br><br>
+    Sie können bis zu drei Produkte gleichzeitig bewerten. Für jedes Produkt wird ein eigener Graph erstellt,
+    der in einer anderen Farbe angezeigt wird.<br><br>
+    Für einen neuen Check klicken Sie auf „Produkte zurücksetzen“<br><br>
+
+
+<div class="tab">
+    <button class="tablinks" onclick="openCity(event, 'Product1')">Produkt 1</button>
+    <button class="tablinks" onclick="openCity(event, 'Product2')">Produkt 2</button>
+    <button class="tablinks" onclick="openCity(event, 'Product3')">Produkt 3</button>
+</div>
+
+
+<div id="Product1" class="tabcontent"></div>
+<div id="Product2" class="tabcontent"></div>
+<div id="Product3" class="tabcontent"></div>
+
+
+<button class="delete-btn" onclick="resetProduct('${productId}'); drawGraph()">Produkte zurücksetzen</button>
+
+
+<div class="prod1">
+    <label><input type="checkbox" class="prd1" id="toggleProduct1" checked onchange="drawGraph()"> Produkt 1 anzeigen&nbsp&nbsp</label><br>
+</div>
+
+<div class="prod2">
+    <label><input type="checkbox" class="prd2" id="toggleProduct2" checked onchange="drawGraph()"> Produkt 2 anzeigen&nbsp&nbsp</label><br>
+</div>
+
+<div class="prod3">
+    <label><input type="checkbox" class="prd3" id="toggleProduct3" checked onchange="drawGraph()"> Produkt 3 anzeigen&nbsp&nbsp</label><br>
+</div>
+
+
+<div class="graph">
+    <canvas id="productGraph"></canvas>
+</div>
+
+
+<button onclick="exportToCSV()" style="display: flex; margin: 20px auto; padding: 10px 20px; font-size: 16px; background-color: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer;">Exportiere Daten als CSV</button>
+
+
+
+<script>
+    function init() {
+        const product1Button = document.querySelector("button.tablinks:nth-child(1)");
+        openCity(event, 'Product1');
+        product1Button.className += " active";
+    }
+
+    let productCount = 3;
+    const criteria = [
+        { heading: "Produkt", items: ["Kundennutzen", "Kundenakzeptanz", "Innovativität", "Technische Qualität", "Zubehör & Optionen", "Dokumentation", "Serviceleistungen"] },
+        { heading: "Preis", items: ["Marktpreis", "Händlerrabatte", "Preis/Leistung"] },
+        { heading: "Vertrieb", items: ["Flächendeckung", "Qualität Vertrieb", "Motivation Vertrieb", "Abnehmerbindung", "Lieferzeit", "Liefertreue"] },
+        { heading: "Kommunikation", items: ["Bekanntheitsgrad", "Produktimage", "Werbemaßnahmen", "Verkaufsförderung", "Pressearbeit"] },
+        { heading: "Intern", items: ["Erzielte Umsätze", "Erzielte Gewinne (DB)", "Beschaffungssituation", "F&E Kompetenz", "Produktteam"] }
+    ];
+
+    function createTabContent(productId) {
+        const tabContent = document.getElementById(productId);
+        tabContent.innerHTML = `
+        <table>
+            <thead>
+                <tr>
+                    <th>Kriterium</th>
+                    <th>-3</th>
+                    <th>-2</th>
+                    <th>-1</th>
+                    <th>0</th>
+                    <th>+1</th>
+                    <th>+2</th>
+                    <th>+3</th>
+                </tr>
+            </thead>
+            <tbody id="criteriaTableBody-${productId}">
+            </tbody>
+        </table>
+    `;
+
+        const tableBody = document.getElementById(`criteriaTableBody-${productId}`);
+
+        // Zwischenüberschriften und Kriterien-Daten
+        const groupedCriteria = [
+            { heading: "Produkt", items: ["Kundennutzen", "Kundenakzeptanz", "Innovativität", "Technische Qualität", "Zubehör & Optionen", "Dokumentation", "Serviceleistungen"] },
+            { heading: "Preis", items: ["Marktpreis", "Händlerrabatte", "Preis/Leistung"] },
+            { heading: "Vertrieb", items: ["Flächendeckung", "Qualität Vertrieb", "Motivation Vertrieb", "Abnehmerbindung", "Lieferzeit", "Liefertreue"] },
+            { heading: "Kommunikation", items: ["Bekanntheitsgrad", "Produktimage", "Werbemaßnahmen", "Verkaufsförderung", "Pressearbeit"] },
+            { heading: "Intern", items: ["Erzielte Umsätze", "Erzielte Gewinne (DB)", "Beschaffungssituation", "F&E Kompetenz", "Produktteam"] },
+        ];
+
+        groupedCriteria.forEach((group) => {
+            // Zwischenüberschrift einfügen
+            const headingRow = document.createElement("tr");
+            headingRow.innerHTML = `<td colspan="8" style="font-weight: bold; text-align: left;">${group.heading}</td>`;
+            tableBody.appendChild(headingRow);
+
+            // Kriterien hinzufügen
+            group.items.forEach((criterion) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+            <td class="criterion-name">${criterion}</td>
+            <td><input type="radio" name="rating-${productId}-${criterion}" value="-3" onchange="drawGraph()"></td>
+            <td><input type="radio" name="rating-${productId}-${criterion}" value="-2" onchange="drawGraph()"></td>
+            <td><input type="radio" name="rating-${productId}-${criterion}" value="-1" onchange="drawGraph()"></td>
+            <td><input type="radio" name="rating-${productId}-${criterion}" value="0" onchange="drawGraph()"></td>
+            <td><input type="radio" name="rating-${productId}-${criterion}" value="1" onchange="drawGraph()"></td>
+            <td><input type="radio" name="rating-${productId}-${criterion}" value="2" onchange="drawGraph()"></td>
+            <td><input type="radio" name="rating-${productId}-${criterion}" value="3" onchange="drawGraph()"></td>
+        `;
+                tableBody.appendChild(row);
+            });
+        });
+
+    }
+
+
+
+
+    function openCity(evt, cityName) {
+        const tabcontent = document.getElementsByClassName("tabcontent");
+        for (let i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        const tablinks = document.getElementsByClassName("tablinks");
+        for (let i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+
+
+    createTabContent("Product1");
+    createTabContent("Product2");
+    createTabContent("Product3");
+
+
+    function resetProduct() {
+            // Alle Radio-Buttons zurücksetzen
+            document.querySelectorAll('input[type="radio"]').forEach(input => input.checked = false);
+
+            // Canvas bereinigen
+            const canvas = document.getElementById('productGraph');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Graph neu zeichnen
+            drawGraph();
+    }
+
+
+
+    function exportToCSV() {
+        let csvContent = "data:text/csv;charset=utf-8,"; // CSV-Header
+        const headers = ["Kriterium"];
+        const dataRows = [];
+
+        // Produktnamen und -bewertungen aus den Tabellen dynamisch extrahieren
+        for (let i = 1; i <= productCount; i++) {
+            const tableBody = document.getElementById(`criteriaTableBody-Product${i}`);
+            if (!tableBody) continue;
+
+            const rows = Array.from(tableBody.children);
+            const validRows = rows.filter(row => row.querySelectorAll("input[type='radio']").length > 0);
+
+            // Nur bei der ersten Tabelle: Produktnamen hinzufügen
+            if (i === 1) {
+                headers.push(...Array.from({ length: productCount }, (_, index) => `Produkt ${index + 1}`));
+            }
+
+            validRows.forEach((row, rowIndex) => {
+                const criterionName = row.querySelector('.criterion-name')?.innerText.trim() || `Kriterium ${rowIndex + 1}`;
+
+                // Initialisiere die Zeile, wenn sie noch nicht existiert
+                if (!dataRows[rowIndex]) {
+                    dataRows[rowIndex] = [criterionName];
+                }
+
+                // Bewertungswert suchen und hinzufügen
+                const inputs = row.querySelectorAll("input[type='radio']");
+                let rating = 0; // Standardwert auf 0 setzen
+                inputs.forEach(input => {
+                    if (input.checked) rating = parseInt(input.value);
+                });
+
+                dataRows[rowIndex][i] = rating; // Füge Bewertung hinzu
+            });
+        }
+
+        // CSV-Inhalt zusammensetzen
+        csvContent += headers.join(",") + "\n";
+        dataRows.forEach(row => {
+            csvContent += row.join(",") + "\n";
+        });
+
+        // Download-Link erstellen
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "Bewertungen.csv");
+        document.body.appendChild(link); // Link vorübergehend ins DOM einfügen
+        link.click();
+        document.body.removeChild(link); // Link wieder entfernen
+    }
+
+
+
+
+
+    const productColors = ["#0000ff", "#FF0000", "#00CA00"]; // Farben für die Produkte
+
+    function drawGraph() {
+        const canvas = document.getElementById('productGraph');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 2200; // Breite des Canvas
+        canvas.height = 1300; // Höhe des Canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "black";
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 3;
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const width = canvas.width;
+        const height = canvas.height;
+        const padding = 100;
+
+        // Dynamische Kriterienliste basierend auf der ersten Tabelle
+        const firstProductTable = document.getElementById('criteriaTableBody-Product1');
+        const rows = Array.from(firstProductTable.children);
+        const validRows = rows.filter(row => row.querySelectorAll("input[type='radio']").length > 0);
+        const xStep = (width - padding * 2) / (validRows.length - 1);
+        const yStep = (height / 1.5 - padding * 2) / 6;
+
+        // Y-Achse zeichnen
+        ctx.beginPath();
+        ctx.moveTo(padding, padding);
+        ctx.lineTo(padding, height / 1.5 - padding);
+        ctx.stroke();
+
+        // X-Achse zeichnen
+        ctx.beginPath();
+        ctx.moveTo(padding, height / 3);
+        ctx.lineTo(width - padding, height / 3);
+        ctx.stroke();
+
+        // Y-Skala und -Labels von -3 bis +3
+        ctx.font = "50px Arial";
+        ctx.textAlign = "right";
+        for (let i = -3; i <= 3; i++) {
+            const y = height / 3 - i * yStep;
+            ctx.beginPath();
+            ctx.moveTo(padding - 10, y);
+            ctx.lineTo(padding + 2200, y);
+            ctx.stroke();
+            ctx.fillText(i, padding - 15, y + 5);
+        }
+
+        // Vertikale Linien und Labels für jedes Kriterium
+        ctx.setLineDash([5, 5]); // Gepunktete Linien
+        validRows.forEach((row, index) => {
+            const criterion = row.querySelector('.criterion-name').innerText; // Dynamischer Name
+            const x = 200 + index * xStep;
+
+            ctx.beginPath();
+            ctx.moveTo(x, padding); // Vertikale Linien
+            ctx.lineTo(x, height / 1.5 - padding);
+            ctx.stroke();
+
+            // Labels (unten)
+            ctx.save();
+            ctx.translate(x, height / 1.5 - padding + 40);
+            ctx.rotate(-Math.PI / 3);
+            ctx.fillText(criterion, 0, 0);
+            ctx.restore();
+
+        });
+        ctx.setLineDash([5, 0]);
+        // Graphen zeichnen, falls Checkbox aktiviert ist
+        for (let i = 1; i <= productCount; i++) {
+            const checkbox = document.getElementById(`toggleProduct${i}`);
+            if (checkbox && checkbox.checked) {
+                drawGraphForProduct(`Product${i}`, productColors[i - 1]);
+            }
+        }
+    }
+
+
+
+
+
+    // Graphen für jedes Produkt zeichnen
+        for (let i = 1; i <= productCount; i++) {
+            const productId = `Product${i}`;
+            const color = productColors[i - 1];
+            drawGraphForProduct(productId, color);
+        }
+
+
+    function drawGraphForProduct(productId, color) {
+        const canvas = document.getElementById('productGraph');
+        const ctx = canvas.getContext('2d');
+
+        const padding = 100;
+
+        // Dynamische Kriterienliste basierend auf der Tabelle
+        const tableBody = document.getElementById(`criteriaTableBody-${productId}`);
+        if (!tableBody) return;
+
+        const rows = Array.from(tableBody.children);
+        const validRows = rows.filter(row => row.querySelectorAll("input[type='radio']").length > 0);
+        const xStep = (canvas.width - padding * 2) / (validRows.length - 1); // Dynamisch für die tatsächlichen Daten
+        const yStep = (canvas.height / 1.5 - padding * 2) / 6;
+
+        ctx.beginPath();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 8;
+
+        validRows.forEach((row, index) => {
+            const inputs = row.querySelectorAll("input[type='radio']");
+            let rating = 0;
+
+            inputs.forEach(input => {
+                if (input.checked) rating = parseInt(input.value);
+            });
+
+            const x = 200 + index * xStep;
+            const y = canvas.height / 3 - rating * yStep;
+
+            if (index === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        });
+
+        ctx.stroke();
+    }
+
+
+
+</script>
+
+</body>
+</html>

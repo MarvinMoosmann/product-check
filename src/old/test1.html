@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../css/style.css" type="text/css" rel="stylesheet" media="all">
+</head>
+<body>
+
+<h2>Produkte Bewertung</h2>
+<p>Die Produkt-Check Web-App hilft Ihnen, die wichtigsten Kriterien eines Produkts zu bewerten und eine grafische Übersicht der Stärken und Schwächen zu erstellen.</p>
+
+
+
+<div class="tab">
+    <button class="tablinks" onclick="openCity(event, 'Product1')">Produkt 1</button>
+    <button class="tablinks" onclick="openCity(event, 'Product2')">Produkt 2</button>
+    <button class="tablinks" onclick="openCity(event, 'Product3')">Produkt 3</button>
+</div>
+
+<div id="Product1" class="tabcontent"></div>
+<div id="Product2" class="tabcontent"></div>
+<div id="Product3" class="tabcontent"></div>
+
+<button onclick="exportToCSV()" style="display: block; margin: 20px auto; padding: 10px 20px; font-size: 16px; background-color: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer;">Exportiere Daten als CSV</button>
+<button onclick="drawGraph()" style="display: block; margin: 20px auto; padding: 10px 20px; font-size: 16px; background-color: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer;">Zeige Diagramm</button>
+
+<!-- Checkboxen zum Aktivieren/Deaktivieren der Produktlinien -->
+<div style="text-align: center; margin-bottom: 20px;">
+    <label><input type="checkbox" id="toggleProduct1" checked onchange="drawGraph()"> Produkt 1 anzeigen</label></br>
+    <label><input type="checkbox" id="toggleProduct2" checked onchange="drawGraph()"> Produkt 2 anzeigen</label></br>
+    <label><input type="checkbox" id="toggleProduct3" checked onchange="drawGraph()"> Produkt 3 anzeigen</label>
+</div>
+
+<div class="graph">
+    <canvas id="productGraph"></canvas>
+</div>
+
+<script>
+    let productCount = 3;
+    const criteria = [
+        "Kundennutzen", "Kundenakzeptanz", "Innovativität", "Technische Qualität",
+        "Zubehör & Optionen", "Dokumentation", "Serviceleistungen", "Marktpreis",
+        "Händlerrabatte", "Preis/Leistung", "Flächendeckung", "Qualität Vertrieb",
+        "Motivation Vertrieb", "Abnehmerbindung", "Lieferzeit", "Liefertreue",
+        "Bekanntheitsgrad", "Produktimage", "Werbemaßnahmen", "Verkaufsförderung",
+        "Pressearbeit", "Erzielte Umsätze", "Erzielte Gewinne (DB)",
+        "Beschaffungssituation", "F&E Kompetenz", "Produktteam"
+    ];
+
+    const productColors = ["blue", "red", "green"];
+
+    function createTabContent(productId) {
+        const tabContent = document.getElementById(productId);
+        tabContent.innerHTML = `
+            <table>
+                <thead>
+                    <tr>
+                        <th>Kriterium</th>
+                        <th>-3</th>
+                        <th>-2</th>
+                        <th>-1</th>
+                        <th>0</th>
+                        <th>+1</th>
+                        <th>+2</th>
+                        <th>+3</th>
+                    </tr>
+                </thead>
+                <tbody id="criteriaTableBody-${productId}"></tbody>
+            </table>
+        `;
+
+        const tableBody = document.getElementById(`criteriaTableBody-${productId}`);
+        criteria.forEach((criterion, index) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td class="criterion-name">${criterion}</td>
+                <td><input type="radio" name="rating-${productId}-${index}" value="-3"></td>
+                <td><input type="radio" name="rating-${productId}-${index}" value="-2"></td>
+                <td><input type="radio" name="rating-${productId}-${index}" value="-1"></td>
+                <td><input type="radio" name="rating-${productId}-${index}" value="0"></td>
+                <td><input type="radio" name="rating-${productId}-${index}" value="1"></td>
+                <td><input type="radio" name="rating-${productId}-${index}" value="2"></td>
+                <td><input type="radio" name="rating-${productId}-${index}" value="3"></td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    function openCity(evt, cityName) {
+        const tabcontent = document.getElementsByClassName("tabcontent");
+        for (let i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        const tablinks = document.getElementsByClassName("tablinks");
+        for (let i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+
+    createTabContent("Product1");
+    createTabContent("Product2");
+    createTabContent("Product3");
+
+    function drawGraph() {
+        const canvas = document.getElementById('productGraph');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 2200;
+        canvas.height = 1300;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Hintergrundachsen zeichnen
+        drawAxes(ctx, canvas);
+
+        // Graphen zeichnen, falls die Checkbox aktiviert ist
+        for (let i = 1; i <= productCount; i++) {
+            const checkbox = document.getElementById(`toggleProduct${i}`);
+            if (checkbox && checkbox.checked) {
+                drawGraphForProduct(`Product${i}`, productColors[i - 1]);
+            }
+        }
+    }
+
+    function drawAxes(ctx, canvas) {
+        const padding = 100;
+        const xStep = (canvas.width - padding * 2) / (criteria.length - 1);
+        const yStep = (canvas.height / 1.5 - padding * 2) / 6;
+
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 3;
+
+        // Y-Achse
+        ctx.beginPath();
+        ctx.moveTo(padding, padding);
+        ctx.lineTo(padding, canvas.height / 1.5 - padding);
+        ctx.stroke();
+
+        // X-Achse
+        ctx.beginPath();
+        ctx.moveTo(padding, canvas.height / 3);
+        ctx.lineTo(canvas.width - padding, canvas.height / 3);
+        ctx.stroke();
+
+        // Y-Skala
+        ctx.font = "50px Arial";
+        ctx.textAlign = "right";
+        for (let i = -3; i <= 3; i++) {
+            const y = canvas.height / 3 - i * yStep;
+            ctx.beginPath();
+            ctx.moveTo(padding - 10, y);
+            ctx.lineTo(canvas.width - padding, y);
+            ctx.stroke();
+            ctx.fillText(i, padding - 15, y + 5);
+        }
+        }
+
+    ctx.restore();
+    ctx.setLineDash([5, 0]);
+
+
+
+    function drawGraphForProduct(productId, color) {
+        const canvas = document.getElementById('productGraph');
+        const ctx = canvas.getContext('2d');
+
+        const padding = 100;
+        const xStep = (canvas.width - padding * 2) / (criteria.length - 1);
+        const yStep = (canvas.height / 1.5 - padding * 2) / 6;
+
+        ctx.beginPath();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 8;
+
+        const tableBody = document.getElementById(`criteriaTableBody-${productId}`);
+        if (!tableBody) return;
+
+        criteria.forEach((criterion, index) => {
+            const row = tableBody.children[index];
+            const inputs = row.querySelectorAll("input[type='radio']");
+            let rating = 0;
+            inputs.forEach(input => {
+                if (input.checked) rating = parseInt(input.value);
+            });
+
+            const x = padding + index * xStep;
+            const y = canvas.height / 3 - rating * yStep;
+
+            if (index === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        });
+
+        ctx.stroke();
+    }
+
+    drawGraphForProduct(); // Initiales Zeichnen
+</script>
+
+</body>
+</html>

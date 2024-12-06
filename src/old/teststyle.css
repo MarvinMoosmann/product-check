@@ -1,0 +1,66 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: white;
+    }
+
+h1 {
+    color: black;
+}
+
+p {
+    color: black;
+}
+
+button {
+    background-color:black;
+}
+
+.text {
+    max-width: 1920px; margin: auto; padding: 20px;
+}
+
+.tab1 {
+    max-width: 700px; margin: auto; padding: 10px;
+}
+
+.tab2 {
+    max-width: 700px; margin: auto; padding: 10px;
+}
+
+.buttons {
+    max-width: 700px; margin: auto; padding: 10px;
+}
+
+.graph {
+    max-width: 700px; margin: auto; padding: 10px;
+}
+
+table {
+    width: 100%; border-collapse: collapse;
+    
+    }
+
+th, td {
+    padding: 8px; text-align: center; border: 1px solid black;
+    color: black;
+    }
+
+
+
+input[type="radio"] {
+    -ms-transform: scale(1.5);
+    -webkit-transform: scale(1.5);
+    transform: scale(1.5);
+    
+    }
+
+button {
+    margin-top: 20px; padding: 10px 15px;
+    background-color: lightgray;
+    border-radius: 10px;
+    }
+
+canvas {
+    margin-top: 10px; display: compact; width: 100%; max-width: 2100px; height: 450px;
+    }
+
