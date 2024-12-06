@@ -122,14 +122,29 @@ th {
         min-width: 80%;
     }
     table {
-        transform: scale(0.5);
+        width: 50%;
+        margin-top: -140px;
+        margin-bottom: -130px;
+        scale: 0.8;
+    }
+    p {
+        max-width: 80%;
     }
 }
 
 @viewport {
-
-    zoom: 0.5;
-
+    .graph {
+        min-width: 80%;
+    }
+    table {
+        width: 50%;
+        margin-top: -140px;
+        margin-bottom: -130px;
+        scale: 0.8;
+    }
+    p {
+        max-width: 80%;
+    }
 }
 
 
