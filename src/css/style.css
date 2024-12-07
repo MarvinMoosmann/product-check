@@ -1,6 +1,18 @@
-input[type="radio"] {
-    -ms-transform: scale(1.5);
-    transform: scale(1.5);
+input[type='radio'] {
+    width: 20px; /* Größer */
+    height: 20px;
+    cursor: pointer; /* Zeiger ändern */
+    border: 2px solid Produktfarbe1; /* Rahmen */
+    appearance: none; /* Native Darstellung entfernen */
+    border-radius: 50%; /* Runde Form */
+    background-color: #d1d3d1; /* Standardfarbe */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+input[type='radio']:checked {
+    background-color: teal; /* Farbe bei Auswahl */
+    transform: scale(1.2); /* Leicht vergrößern bei Auswahl */
+    border-color: white; /* Randfarbe ändern */
 }
 
 
@@ -13,18 +25,21 @@ body {
     justify-content: center;
     align-items: center;
     margin-inline: auto;
+
 }
 
 h2 {
-    text-align: right;
+    text-align: center;
     font-size: 50px;
 }
 
 p {
     margin-inline: auto;
-    max-width: 50%;
+    width: 50%;
     font-size: 20px;
+    text-align: justify;
 }
+
 
 /* Tabs styling */
 .tab {
@@ -99,7 +114,6 @@ th {
     padding-left: 15px;
 }
 
-/* Delete button styling */
 .delete-btn {
     color: white;
     background-color: #d9534f;
@@ -118,40 +132,48 @@ th {
 
 /* Responsive adjustments  */
 @media (max-width: 768px) {
-    .graph {
-        min-width: 80%;
+    input[type='radio'] {
+        width: 13px; /* Größer */
+        height: 13px;
+        cursor: pointer; /* Zeiger ändern */
+        border: 2px solid Produktfarbe1; /* Rahmen */
+        appearance: none; /* Native Darstellung entfernen */
+        border-radius: 50%; /* Runde Form */
+        background-color: #d1d3d1; /* Standardfarbe */
+        transition: background-color 0.3s ease, transform 0.2s ease;
     }
-    table {
-        width: 50%;
-        margin-top: -140px;
-        margin-bottom: -130px;
-        scale: 0.8;
-    }
-    p {
-        max-width: 80%;
-    }
-}
 
-@viewport {
     .graph {
-        min-width: 80%;
+        min-width: 90%;
     }
+
     table {
-        width: 50%;
-        margin-top: -140px;
-        margin-bottom: -130px;
-        scale: 0.8;
+        width: 90%;
+        margin-inline: auto;
+        scale: auto;
     }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+        font-size: 15px;
+    }
+
     p {
-        max-width: 80%;
+        min-width: 80%;
+        text-align: left;
+        font-size: 17px;
     }
+
+    
 }
 
 
 .graph {
     margin-inline: auto;
     display: flex;
-    max-width: 40%;
+    max-width: 50%;
 }
 
 canvas {

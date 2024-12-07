@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <link href="css/style.css" type="text/css" rel="stylesheet" media="all">
     <link rel="icon" href="css/icon.ico" sizes=any >
     <title>Produkt-Check</title>
@@ -11,7 +11,7 @@
 
 <h2>Produkte Bewertung</h2>
 
-<p>Die Produkt-Check Web-App unterstützt Sie dabei, ein Produkt anhand der wichtigsten Kriterien zu bewerten.<br><br>
+   <p>Die Produkt-Check Web-App unterstützt Sie dabei, ein Produkt anhand der wichtigsten Kriterien zu bewerten.<br><br>
     Die Kriterienliste umfasst verschiedene Faktoren wie „Kundennutzen“, „Technische Qualität“, „Marktpreis“ usw.
     Für jedes Kriterium bewerten Sie Ihr Produkt auf einer Skala von -3 bis +3:<br><br>
     &#8226;  -&nbsp3 &nbsp=&nbsp unterdurchschnittlich<br>
@@ -20,7 +20,7 @@
     Sie können bis zu drei Produkte gleichzeitig bewerten. Für jedes Produkt wird ein eigener Graph erstellt,
     der in einer anderen Farbe angezeigt wird.<br><br>
     Für einen neuen Check klicken Sie auf „Produkte zurücksetzen“<br><br>
-
+    </p>
 
 <div class="tab">
     <button class="tablinks" onclick="openCity(event, 'Product1')">Produkt 1</button>
@@ -51,8 +51,9 @@
 
 
 <div class="graph">
-    <canvas id="productGraph"></canvas>
+    <canvas id="productGraph" style="max-width: 100%; height: auto;"></canvas>
 </div>
+
 
 
 <button onclick="exportToCSV()" style="display: flex; margin: 20px auto; padding: 10px 20px; font-size: 16px; background-color: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer;">Exportiere Daten als CSV</button>
