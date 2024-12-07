@@ -10,8 +10,8 @@ input[type='radio'] {
 }
 
 input[type='radio']:checked {
-    background-color: teal; /* Farbe bei Auswahl */
-    transform: scale(1.2); /* Leicht vergrößern bei Auswahl */
+    background-color: #005aff; /* Farbe bei Auswahl */
+    transform: scale(1.1); /* Leicht vergrößern bei Auswahl */
     border-color: white; /* Randfarbe ändern */
 }
 
@@ -74,6 +74,8 @@ p {
     background-color: #ddd;
 }
 
+
+
 /* Tab content styling */
 .tabcontent {
     display: none;
@@ -85,7 +87,7 @@ p {
 }
 
 .tabcontent.active {
-    display: block;
+    display: compact;
 }
 
 /* Table styling */
@@ -111,7 +113,7 @@ th {
 
 .criterion-name {
     text-align: left;
-    padding-left: 15px;
+    padding-left: 10px;
 }
 
 .delete-btn {
@@ -130,46 +132,6 @@ th {
     background-color: #c1241d;
 }
 
-/* Responsive adjustments  */
-@media (max-width: 768px) {
-    input[type='radio'] {
-        width: 13px; /* Größer */
-        height: 13px;
-        cursor: pointer; /* Zeiger ändern */
-        border: 2px solid Produktfarbe1; /* Rahmen */
-        appearance: none; /* Native Darstellung entfernen */
-        border-radius: 50%; /* Runde Form */
-        background-color: #d1d3d1; /* Standardfarbe */
-        transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-
-    .graph {
-        min-width: 90%;
-    }
-
-    table {
-        width: 90%;
-        margin-inline: auto;
-        scale: auto;
-    }
-
-    th, td {
-        border: 1px solid #ddd;
-        padding: 10px;
-        text-align: center;
-        font-size: 15px;
-    }
-
-    p {
-        min-width: 80%;
-        text-align: left;
-        font-size: 17px;
-    }
-
-    
-}
-
-
 .graph {
     margin-inline: auto;
     display: flex;
@@ -177,13 +139,9 @@ th {
 }
 
 canvas {
-    margin-inline: auto;
-    display: flex;
     width: 100%;
     height: fit-content;
 }
-
-
 
 .prod1 {
     background-color: #0000ff;
@@ -210,7 +168,52 @@ canvas {
     border-radius: 5px;
     color: #f6f6f6;
     max-width: fit-content;
-    margin: 7px;
+    margin: 6px;
     margin-inline: auto;
     font-size: 20px;
+}
+
+
+/* Responsive adjustments  */
+@media (max-width: 768px) {
+    input[type='radio'] {
+        width: 12px; /* Größer */
+        height: 12px;
+    }
+
+    .tab button {
+        font-size: 18px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 5px;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    .criterion-name {
+        text-align: left;
+        padding-left: 5px;
+    }
+
+    table {
+        min-width: 90%;
+    }
+
+    .graph {
+        min-width: 90%;
+    }
+
+    p {
+        min-width: 80%;
+        text-align: left;
+        font-size: 17px;
+    }
+
+    h2 {
+        font-size: 40px;
+    }
+
+
 }
