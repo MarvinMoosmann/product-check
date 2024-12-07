@@ -1,31 +1,6 @@
-input[type='radio'] {
-    width: 20px; /* Größer */
-    height: 20px;
-    cursor: pointer; /* Zeiger ändern */
-    border: 2px solid Produktfarbe1; /* Rahmen */
-    appearance: none; /* Native Darstellung entfernen */
-    border-radius: 50%; /* Runde Form */
-    background-color: #d1d3d1; /* Standardfarbe */
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-input[type='radio']:checked {
-    background-color: #005aff; /* Farbe bei Auswahl */
-    transform: scale(1.1); /* Leicht vergrößern bei Auswahl */
-    border-color: white; /* Randfarbe ändern */
-}
-
-
 body {
     font-family: "Calibri", sans-serif;
-    margin: 00px;
-    padding: 0;
     background-color: #f9f9f9;
-    display: block;
-    justify-content: center;
-    align-items: center;
-    margin-inline: auto;
-
 }
 
 h2 {
@@ -39,6 +14,9 @@ p {
     font-size: 20px;
     text-align: justify;
 }
+
+
+
 
 
 /* Tabs styling */
@@ -76,6 +54,8 @@ p {
 
 
 
+
+
 /* Tab content styling */
 .tabcontent {
     display: none;
@@ -99,6 +79,23 @@ table {
     font-size: 20px;
 }
 
+input[type='radio'] {
+    width: 20px; /* Größer */
+    height: 20px;
+    cursor: pointer; /* Zeiger ändern */
+    border: 2px solid Produktfarbe1; /* Rahmen */
+    appearance: none; /* Native Darstellung entfernen */
+    border-radius: 50%; /* Runde Form */
+    background-color: #d1d3d1; /* Standardfarbe */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+input[type='radio']:checked {
+    background-color: #005aff; /* Farbe bei Auswahl */
+    transform: scale(1.1); /* Leicht vergrößern bei Auswahl */
+    border-color: white; /* Randfarbe ändern */
+}
+
 th, td {
     border: 1px solid #ddd;
     padding: 10px;
@@ -116,6 +113,9 @@ th {
     padding-left: 10px;
 }
 
+
+
+
 .delete-btn {
     color: white;
     background-color: #d9534f;
@@ -132,16 +132,10 @@ th {
     background-color: #c1241d;
 }
 
-.graph {
-    margin-inline: auto;
-    display: flex;
-    max-width: 50%;
-}
 
-canvas {
-    width: 100%;
-    height: fit-content;
-}
+
+
+
 
 .prod1 {
     background-color: #0000ff;
@@ -163,6 +157,7 @@ canvas {
     font-size: 20px;
 }
 
+
 .prod3 {
     background-color: #00ca00;
     border-radius: 5px;
@@ -172,6 +167,21 @@ canvas {
     margin-inline: auto;
     font-size: 20px;
 }
+
+.graph {
+    margin-inline: auto;
+    display: flex;
+    max-width: 50%;
+}
+
+canvas {
+    width: 100%;
+    height: fit-content;
+}
+
+
+
+
 
 
 /* Responsive adjustments  */
