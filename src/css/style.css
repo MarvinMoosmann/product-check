@@ -91,10 +91,26 @@ input[type='radio'] {
 }
 
 input[type='radio']:checked {
-    background-color: #005aff; /* Farbe bei Auswahl */
     transform: scale(1.1); /* Leicht vergrößern bei Auswahl */
     border-color: white; /* Randfarbe ändern */
 }
+
+/* Farbige Radio-Buttons für Produkt 1 */
+#criteriaTableBody-Product1 input[type='radio']:checked {
+    background-color: #0000ff; /* Blau */
+}
+
+/* Farbige Radio-Buttons für Produkt 2 */
+#criteriaTableBody-Product2 input[type='radio']:checked {
+    background-color: #ff0000; /* Rot */
+}
+
+/* Farbige Radio-Buttons für Produkt 3 */
+#criteriaTableBody-Product3 input[type='radio']:checked {
+    background-color: #00ca00; /* Grün */
+}
+
+
 
 th, td {
     border: 1px solid #ddd;
