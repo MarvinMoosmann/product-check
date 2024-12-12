@@ -55,12 +55,36 @@
 </div>
 
 
+<button onclick="exportGraphAsPNG()" style="display: flex; margin: 20px auto; padding: 10px 20px; font-size: 16px; background-color: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer;">Graph als PNG exportieren</button>
 
-<button onclick="exportToCSV()" style="display: flex; margin: 20px auto; padding: 10px 20px; font-size: 16px; background-color: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer;">Exportiere Daten als CSV</button>
-
+<button onclick="exportToCSV()" style="display: flex; margin: 20px auto; padding: 10px 20px; font-size: 16px; background-color: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer;">Daten als CSV exportieren</button>
 
 
 <script>
+    function exportGraphAsPNG() {
+        const canvas = document.getElementById('productGraph');
+        const tempCanvas = document.createElement('canvas');
+        const ctx = tempCanvas.getContext('2d');
+
+        // Temporäres Canvas mit weißem Hintergrund erstellen
+        tempCanvas.width = canvas.width + 50;
+        tempCanvas.height = canvas.height;
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+        // Original-Canvas auf das temporäre Canvas kopieren
+        ctx.drawImage(canvas, 10, 10);
+
+        // PNG-Daten erzeugen
+        const image = tempCanvas.toDataURL("image/png");
+
+        // Download-Link erstellen und simulieren
+        const link = document.createElement('a');
+        link.download = 'graph.png';
+        link.href = image;
+        link.click();
+    }
+
     function init() {
         const product1Button = document.querySelector("button.tablinks:nth-child(1)");
         openCity(event, 'Product1');
